@@ -27,8 +27,9 @@ do
       cpu=${cpu_id%%$tag_cpu_id*}
       #remove 'space'
       cpu=$(echo $cpu | sed s/[[:space:]]//g)
-      
-      print=${print}" CPU:"${cpu}"% "
+      cpuused_num=$(awk 'BEGIN{print 100.0-'$cpu'}')    
+
+      print=${print}" CPU:"${cpuused_num}"% "
     elif [[ $line =~ $tag_mem ]]
     then
       memstr=${line#*$tag_mem}
@@ -41,7 +42,7 @@ do
       memused=$(echo $memused | sed s/[[:space:]]//g)
       let memtotal_num=$memtotal
       let memused_num=$memused
-      mem_persent=$(($memused_num * 100 / $memtotal_num))
+      mem_persent=$(awk 'BEGIN{printf("%.1f",'$memused_num'.0*100/'$memtotal_num')}')
       let memtotal_num_mb=$(($memtotal_num / 1024))
       let memused_num_mb=$(($memused_num / 1024))
 
